@@ -26,8 +26,9 @@ export default function(options, cb) {
       const proxyOptions = url.parse(proxyUrl);
       requestOptions.proxy = false; //proxyParsed
       const proxyAgentOptions = { ...agentOptions, ...proxyOptions };
-      requestOptions.httpAgent = new httpProxyAgent(proxyAgentOptions);
-      requestOptions.httpsAgent = new httpsProxyAgent(proxyAgentOptions);
+      const httpsProxy = new httpsProxyAgent(proxyAgentOptions);
+      requestOptions.httpAgent = httpsProxy;
+      requestOptions.httpsAgent = httpsProxy;
     } else {
       requestOptions.httpAgent = new http.Agent(agentOptions);
       requestOptions.httpsAgent = new https.Agent(agentOptions);
