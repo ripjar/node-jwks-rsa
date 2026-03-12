@@ -1,24 +1,27 @@
-import http from 'http';
-import https from 'https';
-import url from 'url';
-import httpProxyAgent from 'http-proxy-agent';
-import httpsProxyAgent from 'https-proxy-agent';
-import { request } from 'axios';
-import { getProxyForUrl } from 'proxy-from-env';
+import http from "http";
+import https from "https";
+import url from "url";
 
-export default function(options, cb) {
+import axios from "axios";
+import httpProxyAgent from "http-proxy-agent";
+import httpsProxyAgent from "https-proxy-agent";
+import { getProxyForUrl } from "proxy-from-env";
+
+export default function (options, cb) {
   const requestOptions = {
     url: options.uri,
     headers: options.headers,
-    timeout: options.timeout
+    timeout: options.timeout,
   };
 
   const proxyUrl = options.proxy || getProxyForUrl(options.uri);
   if (proxyUrl || options.agentOptions || options.strictSSL != undefined) {
     const agentOptions = {
-      ...(options.strictSSL != undefined) && { rejectUnauthorized: options.strictSSL },
+      ...(options.strictSSL != undefined && {
+        rejectUnauthorized: options.strictSSL,
+      }),
       ...(options.headers && { headers: options.headers }),
-      ...options.agentOptions
+      ...options.agentOptions,
     };
 
     if (proxyUrl) {
@@ -35,7 +38,8 @@ export default function(options, cb) {
     }
   }
 
-  request(requestOptions)
-    .then(response => cb(null, response))
-    .catch(err => cb(err));
+  axios
+    .request(requestOptions)
+    .then((response) => cb(null, response))
+    .catch((err) => cb(err));
 }
