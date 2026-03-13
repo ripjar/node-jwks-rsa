@@ -3,7 +3,6 @@ import https from "https";
 import url from "url";
 
 import axios from "axios";
-import httpProxyAgent from "http-proxy-agent";
 import httpsProxyAgent from "https-proxy-agent";
 import { getProxyForUrl } from "proxy-from-env";
 
@@ -11,17 +10,17 @@ export default function (options, cb) {
   const requestOptions = {
     url: options.uri,
     headers: options.headers,
-    timeout: options.timeout,
+    timeout: options.timeout
   };
 
   const proxyUrl = options.proxy || getProxyForUrl(options.uri);
   if (proxyUrl || options.agentOptions || options.strictSSL != undefined) {
     const agentOptions = {
       ...(options.strictSSL != undefined && {
-        rejectUnauthorized: options.strictSSL,
+        rejectUnauthorized: options.strictSSL
       }),
       ...(options.headers && { headers: options.headers }),
-      ...options.agentOptions,
+      ...options.agentOptions
     };
 
     if (proxyUrl) {
